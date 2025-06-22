@@ -1,16 +1,16 @@
 import BaseLayout from "../../components/BaseLayout";
 
-export default function Signup() {
+export default function Login() {
   return (
     <BaseLayout>
       <div className="col-span-12 flex items-center justify-center min-h-[70vh]">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 w-full max-w-md border border-slate-200 dark:border-slate-700">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-              Create your account
+              Welcome back
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
-              Join Denariq and take control of your finances
+              Sign in to your Denariq account
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default function Signup() {
                 id="password"
                 name="password"
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
-                placeholder="Create a password"
+                placeholder="Enter your password"
                 required
               />
             </div>
@@ -47,7 +47,7 @@ export default function Signup() {
               type="submit"
               className="w-full bg-primary hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200"
             >
-              Create Account
+              Sign In
             </button>
 
             <div className="relative">
@@ -77,9 +77,9 @@ export default function Signup() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Already have an account?{" "}
-              <a href="/login" className="text-primary hover:text-blue-700 font-medium">
-                Sign in
+              Don't have an account?{" "}
+              <a href="/signup" className="text-primary hover:text-blue-700 font-medium">
+                Sign up
               </a>
             </p>
           </div>

@@ -2,47 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import ThemeToggle from "./ThemeToggle";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
 }
 
 export default function BaseLayout({ children }: BaseLayoutProps) {
-  const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Initialize dark mode on mount
+  // Initialize on mount
   useEffect(() => {
     setMounted(true);
-    
-    // Check for existing dark mode preference or system preference
-    const savedMode = localStorage.getItem('darkMode');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = savedMode === 'true' || (savedMode === null && prefersDark);
-
-    setIsDark(shouldBeDark);
-    
-    if (shouldBeDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   }, []);
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    const newMode = !isDark;
-    setIsDark(newMode);
-    
-    // Save preference to localStorage
-    localStorage.setItem('darkMode', newMode.toString());
-    
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
 
   // Prevent hydration mismatch
   if (!mounted) {
@@ -66,18 +38,8 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
             </h1>
           </div>
 
-          {/* Dark/Light Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 border border-slate-200 dark:border-slate-700"
-          >
-            <span className="text-sm">
-              {isDark ? '☀️' : '🌙'}
-            </span>
-            <span className="text-sm font-medium hidden sm:inline">
-              {isDark ? 'Light' : 'Dark'}
-            </span>
-          </button>
+          {/* Theme Toggle */}
+          <ThemeToggle />
         </div>
       </motion.nav>
 
