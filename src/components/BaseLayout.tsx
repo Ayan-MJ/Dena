@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -51,7 +52,12 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
       {/* Sticky Navbar */}
-      <nav className="sticky top-0 z-50 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <motion.nav 
+        className="sticky top-0 z-50 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="h-full px-6 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
@@ -73,7 +79,7 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
             </span>
           </button>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Main Content Area with 12-column Grid */}
       <main className="grid grid-cols-12 gap-6 px-6 py-8 max-w-7xl mx-auto">
