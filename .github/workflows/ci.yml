@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: 'npm'
-          cache-dependency-path: denariq-web/package-lock.json
 
       - name: Install dependencies
         working-directory: denariq-web
@@ -83,8 +81,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: 'npm'
-          cache-dependency-path: denariq-web/package-lock.json
 
       - name: Install dependencies
         working-directory: denariq-web
