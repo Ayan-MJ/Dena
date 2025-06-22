@@ -91,3 +91,42 @@ src/
 ## License
 
 Private - Denariq Team Only
+
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment. The pipeline includes:
+
+### Automated Testing
+- **Unit Tests**: Jest with React Testing Library
+- **E2E Tests**: Playwright for end-to-end testing
+- **Storybook Tests**: Component testing with accessibility checks
+- **Visual Regression**: Chromatic for visual snapshot testing
+
+### CI Workflow
+The CI pipeline runs on every pull request and includes:
+1. Linting with ESLint
+2. Unit tests with Jest
+3. Storybook build and component testing
+4. Playwright e2e tests
+5. Visual regression testing with Chromatic
+
+### Setup Requirements
+To enable visual regression testing, you need to:
+1. Create a Chromatic account at https://www.chromatic.com/
+2. Add your project token as `CHROMATIC_PROJECT_TOKEN` in GitHub Secrets
+3. Copy `.env.example` to `.env.local` and add your token for local testing
+
+### Running Tests Locally
+```bash
+# Run unit tests
+npm test
+
+# Run e2e tests
+npm run test:e2e
+
+# Run Storybook tests
+npm run test-storybook
+
+# Run visual regression tests
+npm run chromatic
+```
