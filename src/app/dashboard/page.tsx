@@ -7,12 +7,19 @@ import BaseLayout from "@/components/BaseLayout";
 import SyncBadge from "@/components/SyncBadge";
 import ConnectBankModal from "@/components/ConnectBankModal";
 import CashFlowChart from "@/components/CashFlowChart";
+import { useCurrency } from "@/components/CurrencyProvider";
+import { formatMoneyWithConversion } from "@/lib/formatMoney";
 
 // Temporary bypass flag - in production this would check authentication
 const BYPASS_AUTH = true;
 
+// Mock data - in production this would come from API
+const MOCK_NET_WORTH_USD = 12450.30;
+const MOCK_MONTHLY_CHANGE_USD = 1200.0;
+
 export default function Dashboard() {
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+  const { primaryCurrency } = useCurrency();
 
   // In production, check authentication here
   if (!BYPASS_AUTH) {
@@ -24,6 +31,10 @@ export default function Dashboard() {
     console.log('Bank connection successful! Public token:', publicToken);
     // In production, this would send the token to your backend
   };
+
+  // Format net worth and monthly change in selected currency
+  const formattedNetWorth = formatMoneyWithConversion(MOCK_NET_WORTH_USD, primaryCurrency);
+  const formattedMonthlyChange = formatMoneyWithConversion(MOCK_MONTHLY_CHANGE_USD, primaryCurrency);
 
   return (
     <BaseLayout>
@@ -64,10 +75,10 @@ export default function Dashboard() {
                   Net Worth
                 </h3>
                 <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-2">
-                  $12,450.30
+                  {formattedNetWorth}
                 </p>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  +$1,200 this month
+                  +{formattedMonthlyChange} this month
                 </p>
               </div>
               <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-full">
