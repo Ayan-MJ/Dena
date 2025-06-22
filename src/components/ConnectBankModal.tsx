@@ -18,7 +18,7 @@ export default function ConnectBankModal({
 }: ConnectBankModalProps) {
   // Plaid Link configuration
   const config = {
-    token: 'link_sandbox_placeholder', // Sandbox key placeholder as requested
+    token: process.env.NEXT_PUBLIC_PLAID_LINK_TOKEN || 'link_sandbox_placeholder', // Use env var or placeholder
     onSuccess: useCallback((public_token: string, metadata: any) => {
       console.log('Plaid Link Success:', { public_token, metadata });
       onSuccess(public_token);
@@ -138,21 +138,21 @@ export default function ConnectBankModal({
                       </svg>
                     </div>
                     <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">
-                      Ready to Connect
+                      Connecting Your Bank
                     </h3>
                     <p className="text-slate-600 dark:text-slate-400 mb-6">
-                      Click the button below to securely connect your bank account through Plaid.
+                      Plaid Link is opening to securely connect your bank account. Follow the prompts in the Plaid window.
                     </p>
                     
-                    <button
-                      onClick={() => openPlaid()}
-                      disabled={!ready}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-                    >
-                      Connect with Plaid
-                    </button>
+                    <div className="flex items-center justify-center py-4">
+                      <div className="animate-pulse flex items-center gap-3">
+                        <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"></div>
+                        <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
+                    </div>
                     
-                    <p className="text-xs text-slate-500 dark:text-slate-500 mt-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-500 mt-4 text-center">
                       Your data is encrypted and secure. We never store your banking credentials.
                     </p>
                   </div>
