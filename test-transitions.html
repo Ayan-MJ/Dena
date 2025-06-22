@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Transition Test</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 2rem;
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.dark {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        
+        .card {
+            padding: 1rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.dark .card {
+            background-color: #1e293b;
+            border-color: #334155;
+        }
+        
+        button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f1f5f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark button {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+        
+        button:hover {
+            background-color: #e2e8f0;
+        }
+        
+        body.dark button:hover {
+            background-color: #334155;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Dark Mode Transition Test</h1>
+    
+    <button onclick="toggleDarkMode()">
+        <span id="icon">🌙</span>
+        <span id="text">Toggle Dark Mode</span>
+    </button>
+    
+    <div class="card">
+        <h3>Test Card</h3>
+        <p>This card should smoothly transition between light and dark modes.</p>
+        <p>Check for smooth background, border, and text color transitions.</p>
+    </div>
+    
+    <div class="card">
+        <h3>✅ Fixed Issues:</h3>
+        <ul>
+            <li>Added proper localStorage persistence</li>
+            <li>Fixed hydration mismatch with mounted state</li>
+            <li>Extended transition duration to 300ms</li>
+            <li>Added transition-all for comprehensive coverage</li>
+            <li>Improved initial state detection</li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById('icon');
+            const text = document.getElementById('text');
+            
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                icon.textContent = '☀️';
+                text.textContent = 'Switch to Light Mode';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                icon.textContent = '🌙';
+                text.textContent = 'Switch to Dark Mode';
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', () => {
+            const savedMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const shouldBeDark = savedMode === 'true' || (savedMode === null && prefersDark);
+            
+            if (shouldBeDark) {
+                document.body.classList.add('dark');
+                document.getElementById('icon').textContent = '☀️';
+                document.getElementById('text').textContent = 'Switch to Light Mode';
+            }
+        });
+    </script>
+    
+    <p><strong>Test Instructions:</strong></p>
+    <ol>
+        <li>Click the toggle button</li>
+        <li>Watch for smooth 300ms transitions</li>
+        <li>Verify both directions (light → dark, dark → light) work</li>
+        <li>Check that preference persists on page reload</li>
+    </ol>
+</body>
+</html> 

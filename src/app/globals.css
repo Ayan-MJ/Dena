@@ -25,7 +25,7 @@
     font-family: inherit;
     line-height: inherit;
     min-height: 100vh;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Reset for common elements */
@@ -60,9 +60,14 @@
     border-collapse: collapse;
     border-spacing: 0;
   }
+
+  /* Smooth transitions for all elements that might change with dark mode */
+  * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
 }
 
-/* Theme Configuration */
+/* Theme Configuration with proper Tailwind v4 syntax */
 @theme {
   --color-primary: #2563EB;
   --color-accent: #22C55E;
