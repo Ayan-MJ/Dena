@@ -1,9 +1,9 @@
 import { formatMoney, formatMoneyAdvanced } from '../formatMoney';
 
 // Helper function to get actual formatted values for comparison
-const getFormattedValue = (amount: number, currency: string, locale?: string) => {
-  return formatMoney(amount, currency, locale);
-};
+// const getFormattedValue = (amount: number, currency: string, locale?: string) => {
+//   return formatMoney(amount, currency, locale);
+// };
 
 describe('formatMoney', () => {
   describe('USD formatting', () => {
