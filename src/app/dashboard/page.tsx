@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Activity, Shield } from "lucide-react";
 import BaseLayout from "@/components/BaseLayout";
+import SyncBadge from "@/components/SyncBadge";
 
 // Temporary bypass flag - in production this would check authentication
 const BYPASS_AUTH = true;
@@ -79,9 +80,9 @@ export default function Dashboard() {
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                   Sync Health
                 </h3>
-                <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-                  All accounts connected
-                </p>
+                <div className="mt-2">
+                  <SyncBadge status="healthy" />
+                </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   Last sync: 2 minutes ago
                 </p>
