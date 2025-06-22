@@ -1,23 +1,45 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, Activity, Shield } from "lucide-react";
+import { TrendingUp, Activity, Shield, Plus } from "lucide-react";
 import BaseLayout from "@/components/BaseLayout";
 import SyncBadge from "@/components/SyncBadge";
+import ConnectBankModal from "@/components/ConnectBankModal";
 
 // Temporary bypass flag - in production this would check authentication
 const BYPASS_AUTH = true;
 
 export default function Dashboard() {
+  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+
   // In production, check authentication here
   if (!BYPASS_AUTH) {
     // Redirect to login or show unauthorized
     return null;
   }
 
+  const handleBankConnectSuccess = (publicToken: string) => {
+    console.log('Bank connection successful! Public token:', publicToken);
+    // In production, this would send the token to your backend
+  };
+
   return (
     <BaseLayout>
       <div className="col-span-12">
+        {/* Temporary Connect Bank Button */}
+        <div className="mb-6">
+          <motion.button
+            onClick={() => setIsConnectModalOpen(true)}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Plus className="w-5 h-5" />
+            Connect Bank (Temporary)
+          </motion.button>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-6">
           {/* Net-worth Summary Card */}
           <motion.div
@@ -93,6 +115,13 @@ export default function Dashboard() {
             </div>
           </motion.div>
         </div>
+
+        {/* Connect Bank Modal */}
+        <ConnectBankModal 
+          open={isConnectModalOpen}
+          onClose={() => setIsConnectModalOpen(false)}
+          onSuccess={handleBankConnectSuccess}
+        />
       </div>
     </BaseLayout>
   );

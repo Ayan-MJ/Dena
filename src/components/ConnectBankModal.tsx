@@ -1,0 +1,167 @@
+'use client';
+
+import { useEffect, useCallback } from 'react';
+import { usePlaidLink } from 'react-plaid-link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+
+interface ConnectBankModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSuccess: (publicToken: string) => void;
+}
+
+export default function ConnectBankModal({ 
+  open, 
+  onClose, 
+  onSuccess 
+}: ConnectBankModalProps) {
+  // Plaid Link configuration
+  const config = {
+    token: 'link_sandbox_placeholder', // Sandbox key placeholder as requested
+    onSuccess: useCallback((public_token: string, metadata: any) => {
+      console.log('Plaid Link Success:', { public_token, metadata });
+      onSuccess(public_token);
+      onClose();
+    }, [onSuccess, onClose]),
+    onExit: useCallback((err: any, metadata: any) => {
+      console.log('Plaid Link Exit:', { err, metadata });
+      onClose();
+    }, [onClose]),
+    onEvent: useCallback((eventName: string, metadata: any) => {
+      console.log('Plaid Link Event:', { eventName, metadata });
+    }, []),
+  };
+
+  const { open: openPlaid, ready } = usePlaidLink(config);
+
+  // Auto-open Plaid when modal opens and link is ready
+  useEffect(() => {
+    if (open && ready) {
+      openPlaid();
+    }
+  }, [open, ready, openPlaid]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && open) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [open, onClose]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [open]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={onClose}
+        >
+          {/* Glassmorphic backdrop */}
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-md" />
+          
+          {/* Modal content */}
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-md mx-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Glassmorphic dialog */}
+            <div className="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-white/10 dark:border-slate-700/50">
+                <div>
+                  <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                    Connect Your Bank
+                  </h2>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    Securely link your bank account with Plaid
+                  </p>
+                </div>
+                <button
+                  onClick={onClose}
+                  className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                {!ready ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-slate-600 dark:text-slate-400">
+                      Initializing secure connection...
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center py-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">
+                      Ready to Connect
+                    </h3>
+                    <p className="text-slate-600 dark:text-slate-400 mb-6">
+                      Click the button below to securely connect your bank account through Plaid.
+                    </p>
+                    
+                    <button
+                      onClick={() => openPlaid()}
+                      disabled={!ready}
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      Connect with Plaid
+                    </button>
+                    
+                    <p className="text-xs text-slate-500 dark:text-slate-500 mt-4">
+                      Your data is encrypted and secure. We never store your banking credentials.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+} 
