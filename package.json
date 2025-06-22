@@ -16,12 +16,16 @@
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
+    "@types/papaparse": "^5.3.16",
     "framer-motion": "^12.18.1",
     "lucide-react": "^0.454.0",
     "next": "15.3.4",
+    "papaparse": "^5.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-plaid-link": "^4.0.1"
+    "react-dropzone": "^14.3.8",
+    "react-plaid-link": "^4.0.1",
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",
