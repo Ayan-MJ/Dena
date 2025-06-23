@@ -82,7 +82,7 @@ describe('ConnectBankModal', () => {
       />
     );
 
-    expect(screen.getByText('Ready to Connect')).toBeInTheDocument();
-    expect(screen.getByText('Connect with Plaid')).toBeInTheDocument();
+    expect(screen.getByText('Connecting Your Bank')).toBeInTheDocument();
+    expect(screen.getByText('Plaid Link is opening to securely connect your bank account. Follow the prompts in the Plaid window.')).toBeInTheDocument();
   });
 }); 
