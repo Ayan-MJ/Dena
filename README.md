@@ -36,12 +36,36 @@ A border-first personal finance platform for freelancers, expats and remote work
    npm install
    ```
 
-3. Start the development server:
+3. Set up environment variables:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   
+   Edit `.env.local` and add your Plaid Link token:
+   ```bash
+   NEXT_PUBLIC_PLAID_LINK_TOKEN=your-plaid-link-token-here
+   ```
+
+4. Start the development server:
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+### Plaid Setup
+
+To enable bank linking functionality:
+
+1. **Sign up for Plaid** at [https://dashboard.plaid.com/](https://dashboard.plaid.com/)
+2. **Create a new application** in your Plaid Dashboard  
+3. **Generate a Link Token** from your backend (see Plaid docs)
+4. **Add the token** to your `.env.local` file:
+   ```bash
+   NEXT_PUBLIC_PLAID_LINK_TOKEN=link-sandbox-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+   ```
+
+**Note:** Link tokens are temporary and must be generated server-side. In production, you'll need a backend endpoint that creates fresh link tokens for each user session.
 
 ### Available Scripts
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
+import CurrencySelector from "./CurrencySelector";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -38,8 +39,11 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
             </h1>
           </div>
 
-          {/* Theme Toggle */}
-          <ThemeToggle />
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            <CurrencySelector />
+            <ThemeToggle />
+          </div>
         </div>
       </motion.nav>
 

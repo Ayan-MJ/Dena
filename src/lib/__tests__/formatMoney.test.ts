@@ -1,4 +1,4 @@
-import { formatMoney, formatMoneyAdvanced } from '../formatMoney';
+import { formatMoney, formatMoneyAdvanced, convertCurrency, formatMoneyWithConversion } from '../formatMoney';
 
 // Helper function to get actual formatted values for comparison
 // const getFormattedValue = (amount: number, currency: string, locale?: string) => {
@@ -90,8 +90,13 @@ describe('formatMoney', () => {
     });
 
     test('handles invalid currency gracefully', () => {
+      // Mock console.warn to prevent noise in test output
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      
       const result = formatMoney(100, 'INVALID');
       expect(result).toBe('INVALID 100.00'); // Fallback format
+      
+      consoleSpy.mockRestore();
     });
 
     test('handles invalid locale gracefully', () => {
@@ -107,6 +112,26 @@ describe('formatMoney', () => {
       expect(formatMoney(1.999, 'USD')).toBe('$2.00'); // Rounds up
       expect(formatMoney(1.001, 'USD')).toBe('$1.00'); // Rounds down
     });
+  });
+
+  it('formats USD correctly', () => {
+    expect(formatMoney(1234.56, 'USD')).toBe('$1,234.56');
+  });
+
+  it('formats EUR correctly', () => {
+    expect(formatMoney(1234.56, 'EUR')).toBe('€1,234.56');
+  });
+
+  it('formats JPY correctly', () => {
+    expect(formatMoney(1234, 'JPY')).toBe('¥1,234.00');
+  });
+
+  it('handles invalid currency gracefully', () => {
+    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    
+    expect(formatMoney(1234.56, 'INVALID')).toBe('INVALID 1234.56');
+    
+    consoleSpy.mockRestore();
   });
 });
 
@@ -144,7 +169,66 @@ describe('formatMoneyAdvanced', () => {
   });
 
   test('handles invalid options gracefully', () => {
+    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    
     const result = formatMoneyAdvanced(100, 'INVALID', { locale: 'invalid' });
     expect(result).toBe('INVALID 100.00'); // Fallback format
+    
+    consoleSpy.mockRestore();
+  });
+
+  it('formats with custom options', () => {
+    const result = formatMoneyAdvanced(1234.56, 'USD', {
+      currencyDisplay: 'code',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+    // Just check that it contains the expected elements - exact format might vary by system
+    expect(result).toContain('USD');
+    expect(result).toContain('1,235');
+  });
+});
+
+describe('convertCurrency', () => {
+  it('converts USD to EUR correctly', () => {
+    const result = convertCurrency(100, 'EUR');
+    expect(result).toBe(85); // 100 * 0.85
+  });
+
+  it('converts USD to JPY correctly', () => {
+    const result = convertCurrency(100, 'JPY');
+    expect(result).toBe(11000); // 100 * 110
+  });
+
+  it('returns USD amount for USD', () => {
+    const result = convertCurrency(100, 'USD');
+    expect(result).toBe(100); // 100 * 1.0
+  });
+
+  it('handles invalid currency gracefully', () => {
+    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    const result = convertCurrency(100, 'INVALID');
+    expect(result).toBe(100);
+    expect(consoleSpy).toHaveBeenCalledWith('No FX rate found for INVALID, returning USD amount');
+    consoleSpy.mockRestore();
+  });
+});
+
+describe('formatMoneyWithConversion', () => {
+  it('converts and formats USD to EUR', () => {
+    const result = formatMoneyWithConversion(100, 'EUR');
+    expect(result).toBe('€85.00'); // 100 * 0.85 formatted as EUR
+  });
+
+  it('converts and formats USD to THB', () => {
+    const result = formatMoneyWithConversion(100, 'THB');
+    // THB might format differently on different systems, so just check conversion worked
+    expect(result).toContain('3,300');
+    expect(result.toLowerCase()).toContain('thb');
+  });
+
+  it('handles USD to USD conversion', () => {
+    const result = formatMoneyWithConversion(100, 'USD');
+    expect(result).toBe('$100.00');
   });
 }); 
