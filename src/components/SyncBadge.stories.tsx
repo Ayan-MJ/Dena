@@ -1,11 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import SyncBadge from './SyncBadge';
+import { Toaster } from 'react-hot-toast';
 
 const meta: Meta<typeof SyncBadge> = {
   title: 'Components/SyncBadge',
   component: SyncBadge,
+  decorators: [
+    (Story) => (
+      <div>
+        <Story />
+        <Toaster position="top-right" />
+      </div>
+    ),
+  ],
   parameters: {
     layout: 'centered',
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        push: (url: string) => {
+          console.log('Navigation to:', url);
+          alert(`Would navigate to: ${url}`);
+        },
+      },
+    },
     docs: {
       description: {
         component: 'A badge component to display sync status with appropriate icons and colors. The warning status includes a subtle pulse animation. Warning and error states automatically trigger toast notifications and are clickable to navigate to reconnect page.',
