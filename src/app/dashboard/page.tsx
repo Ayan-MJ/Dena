@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { TrendingUp, Shield, Plus, Building2 } from "lucide-react";
@@ -12,6 +12,9 @@ import { useCurrency } from "@/components/CurrencyProvider";
 import { formatMoneyWithConversion } from "@/lib/formatMoney";
 import { useNotify } from "@/lib/useNotify";
 
+// Force dynamic rendering to prevent prerendering issues with useSearchParams
+export const dynamic = 'force-dynamic';
+
 // Temporary bypass flag - in production this would check authentication
 const BYPASS_AUTH = true;
 
@@ -19,7 +22,7 @@ const BYPASS_AUTH = true;
 const MOCK_NET_WORTH_USD = 12450.30;
 const MOCK_MONTHLY_CHANGE_USD = 1200.0;
 
-export default function Dashboard() {
+function DashboardContent() {
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const { primaryCurrency } = useCurrency();
   const searchParams = useSearchParams();
@@ -139,5 +142,13 @@ export default function Dashboard() {
         />
       </div>
     </BaseLayout>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 } 
