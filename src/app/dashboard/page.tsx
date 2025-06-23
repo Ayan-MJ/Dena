@@ -3,10 +3,11 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { TrendingUp, Shield, Plus, Building2 } from "lucide-react";
+import { TrendingUp, Shield, Plus, Building2, DollarSign, Rocket } from "lucide-react";
 import BaseLayout from "@/components/BaseLayout";
 import SyncBadge from "@/components/SyncBadge";
 import ConnectBankModal from "@/components/ConnectBankModal";
+import BillNegotiationModal from "@/components/BillNegotiationModal";
 import CashFlowChart from "@/components/CashFlowChart";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { formatMoneyWithConversion } from "@/lib/formatMoney";
@@ -24,6 +25,8 @@ const MOCK_MONTHLY_CHANGE_USD = 1200.0;
 
 function DashboardContent() {
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+  const [isBillNegotiationModalOpen, setIsBillNegotiationModalOpen] = useState(false);
+  const [billNegotiationEnabled, setBillNegotiationEnabled] = useState(false);
   const { primaryCurrency } = useCurrency();
   const searchParams = useSearchParams();
   const { success } = useNotify();
@@ -44,6 +47,11 @@ function DashboardContent() {
   const handleBankConnectSuccess = (publicToken: string) => {
     console.log('Bank connection successful! Public token:', publicToken);
     // In production, this would send the token to your backend
+  };
+
+  const handleBillNegotiationSuccess = () => {
+    setBillNegotiationEnabled(true);
+    success('Bill negotiation enabled! We&apos;ll start working on lowering your bills.');
   };
 
   // Format net worth and monthly change in selected currency
@@ -76,7 +84,7 @@ function DashboardContent() {
           </motion.a>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Net-worth Summary Card */}
           <motion.div
             className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm cursor-pointer"
@@ -109,6 +117,47 @@ function DashboardContent() {
             <CashFlowChart />
           </motion.div>
 
+          {/* Lower Bills Card */}
+          <motion.div
+            className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm cursor-pointer"
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.2 }}
+          >
+            {!billNegotiationEnabled ? (
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                    Lower my bills
+                  </h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-4">
+                    Save money on utilities & subscriptions
+                  </p>
+                  <button
+                    onClick={() => setIsBillNegotiationModalOpen(true)}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Get Started
+                  </button>
+                </div>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-full">
+                  <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                </div>
+              </div>
+            ) : (
+              <div className="text-center">
+                <div className="p-4 bg-green-100 dark:bg-green-900/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Rocket className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                  We&apos;re working on it! 🚀
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Our team is negotiating better rates for your bills. We&apos;ll notify you when we find savings.
+                </p>
+              </div>
+            )}
+          </motion.div>
+
           {/* Sync Health Status Card */}
           <motion.div
             className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm cursor-pointer"
@@ -139,6 +188,13 @@ function DashboardContent() {
           open={isConnectModalOpen}
           onClose={() => setIsConnectModalOpen(false)}
           onSuccess={handleBankConnectSuccess}
+        />
+
+        {/* Bill Negotiation Modal */}
+        <BillNegotiationModal 
+          open={isBillNegotiationModalOpen}
+          onClose={() => setIsBillNegotiationModalOpen(false)}
+          onSuccess={handleBillNegotiationSuccess}
         />
       </div>
     </BaseLayout>
