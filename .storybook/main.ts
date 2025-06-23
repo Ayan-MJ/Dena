@@ -18,6 +18,23 @@ const config: StorybookConfig = {
   },
   "staticDirs": [
     "../public"
-  ]
+  ],
+  "viteFinal": async (config) => {
+    // Suppress "use client" directive warnings in Storybook
+    if (config.build) {
+      config.build.rollupOptions = {
+        ...config.build.rollupOptions,
+        external: [],
+        onwarn(warning, warn) {
+          // Ignore "use client" directive warnings
+          if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+            return;
+          }
+          warn(warning);
+        }
+      };
+    }
+    return config;
+  }
 };
 export default config;

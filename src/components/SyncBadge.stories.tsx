@@ -7,7 +7,8 @@ const meta: Meta<typeof SyncBadge> = {
   component: SyncBadge,
   decorators: [
     (Story) => (
-      <div>
+      <div role="main" aria-label="Sync Badge Component Demo">
+        <h1 className="sr-only">Sync Badge Status Indicator</h1>
         <Story />
         <Toaster position="top-right" />
       </div>
