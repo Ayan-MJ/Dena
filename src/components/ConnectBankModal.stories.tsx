@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import ConnectBankModal from './ConnectBankModal';
 
@@ -29,7 +29,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Interactive story with state management
-const InteractiveTemplate = (args: any) => {
+const InteractiveTemplate = (args: { onSuccess: (token: string) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

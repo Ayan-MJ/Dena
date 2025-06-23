@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ConnectBanksPage from '../page';
 
 // Mock react-plaid-link
@@ -12,9 +12,9 @@ jest.mock('react-plaid-link', () => ({
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-    a: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
+    a: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
   },
 }));
 
@@ -27,7 +27,15 @@ jest.mock('@/components/BaseLayout', () => {
 
 // Mock ConnectBankModal
 jest.mock('@/components/ConnectBankModal', () => {
-  return function MockConnectBankModal({ open, onClose, onSuccess }: any) {
+  return function MockConnectBankModal({ 
+    open, 
+    onClose, 
+    onSuccess 
+  }: { 
+    open: boolean; 
+    onClose: () => void; 
+    onSuccess: (token: string) => void; 
+  }) {
     return open ? (
       <div data-testid="connect-bank-modal">
         <div>Connecting Your Bank</div>
@@ -64,16 +72,12 @@ describe('ConnectBanksPage', () => {
     expect(screen.getByText('Connecting Your Bank')).toBeInTheDocument();
   });
 
-  it('shows connected bank after successful connection', async () => {
+  it('shows connected bank after successful connection', () => {
     render(<ConnectBanksPage />);
     
     // Simulate successful bank connection
     const connectButton = screen.getByText('Connect bank');
     fireEvent.click(connectButton);
-    
-    // Find and trigger the success callback (this would normally come from Plaid)
-    // We'll simulate it by directly calling the success handler
-    const page = screen.getByText('Link your first account').closest('div');
     
     // Since we can't easily simulate the Plaid callback in tests,
     // we'll verify the UI elements that should appear after success

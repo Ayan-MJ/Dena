@@ -1,7 +1,12 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
+import { 
+  usePlaidLink, 
+  PlaidLinkOnSuccess, 
+  PlaidLinkOnExit, 
+  PlaidLinkOnEvent 
+} from 'react-plaid-link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -19,16 +24,16 @@ export default function ConnectBankModal({
   // Plaid Link configuration
   const config = {
     token: process.env.NEXT_PUBLIC_PLAID_LINK_TOKEN || 'link_sandbox_placeholder', // Use env var or placeholder
-    onSuccess: useCallback((public_token: string, metadata: any) => {
+    onSuccess: useCallback<PlaidLinkOnSuccess>((public_token, metadata) => {
       console.log('Plaid Link Success:', { public_token, metadata });
       onSuccess(public_token);
       onClose();
     }, [onSuccess, onClose]),
-    onExit: useCallback((err: any, metadata: any) => {
+    onExit: useCallback<PlaidLinkOnExit>((err, metadata) => {
       console.log('Plaid Link Exit:', { err, metadata });
       onClose();
     }, [onClose]),
-    onEvent: useCallback((eventName: string, metadata: any) => {
+    onEvent: useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
       console.log('Plaid Link Event:', { eventName, metadata });
     }, []),
   };

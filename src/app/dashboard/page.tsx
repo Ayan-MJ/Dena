@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { TrendingUp, Activity, Shield, Plus, Building2 } from "lucide-react";
+import { TrendingUp, Shield, Plus, Building2 } from "lucide-react";
 import BaseLayout from "@/components/BaseLayout";
 import SyncBadge from "@/components/SyncBadge";
 import ConnectBankModal from "@/components/ConnectBankModal";
