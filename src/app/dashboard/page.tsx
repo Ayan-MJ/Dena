@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { TrendingUp, Activity, Shield, Plus, Building2 } from "lucide-react";
 import BaseLayout from "@/components/BaseLayout";
@@ -9,6 +10,7 @@ import ConnectBankModal from "@/components/ConnectBankModal";
 import CashFlowChart from "@/components/CashFlowChart";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { formatMoneyWithConversion } from "@/lib/formatMoney";
+import { useNotify } from "@/lib/useNotify";
 
 // Temporary bypass flag - in production this would check authentication
 const BYPASS_AUTH = true;
@@ -20,6 +22,15 @@ const MOCK_MONTHLY_CHANGE_USD = 1200.0;
 export default function Dashboard() {
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const { primaryCurrency } = useCurrency();
+  const searchParams = useSearchParams();
+  const { success } = useNotify();
+
+  // Check for importSuccess parameter and show toast
+  useEffect(() => {
+    if (searchParams.get('importSuccess') === '1') {
+      success('Transactions imported!');
+    }
+  }, [searchParams, success]);
 
   // In production, check authentication here
   if (!BYPASS_AUTH) {

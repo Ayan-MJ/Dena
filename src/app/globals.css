@@ -95,6 +95,9 @@
   --background-secondary: #f8fafc;
   --border: #e2e8f0;
   --muted: #64748b;
+  --toast-bg: #ffffff;
+  --toast-text: #0f172a;
+  --toast-border: #e2e8f0;
 }
 
 /* Dark mode variables */
@@ -104,6 +107,9 @@
   --background-secondary: #1e293b;
   --border: #334155;
   --muted: #94a3b8;
+  --toast-bg: #1e293b;
+  --toast-text: #f8fafc;
+  --toast-border: #334155;
 }
 
 /* Base styles */

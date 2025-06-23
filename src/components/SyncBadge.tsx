@@ -2,6 +2,9 @@
 
 import { Check, AlertTriangle, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useNotify } from "@/lib/useNotify";
 
 interface SyncBadgeProps {
   status: 'healthy' | 'warning' | 'error';
@@ -9,6 +12,22 @@ interface SyncBadgeProps {
 }
 
 export default function SyncBadge({ status, className = "" }: SyncBadgeProps) {
+  const router = useRouter();
+  const { error } = useNotify();
+
+  // Fire toast when status switches to warning or error
+  useEffect(() => {
+    if (status === 'warning' || status === 'error') {
+      error('Bank connection lost – click to relink');
+    }
+  }, [status, error]);
+
+  const handleClick = () => {
+    if (status === 'warning' || status === 'error') {
+      router.push('/connect-banks');
+    }
+  };
+
   const getStatusConfig = () => {
     switch (status) {
       case 'healthy':
@@ -68,9 +87,12 @@ export default function SyncBadge({ status, className = "" }: SyncBadgeProps) {
 
   return (
     <motion.div
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium ${config.bgColor} ${config.textColor} ${config.border} ${className}`}
+      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium ${config.bgColor} ${config.textColor} ${config.border} ${className} ${
+        (status === 'warning' || status === 'error') ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''
+      }`}
       animate={config.pulse ? { opacity: [1, 0.7, 1] } : {}}
       transition={config.pulse ? { duration: 2, repeat: Infinity } : {}}
+      onClick={handleClick}
     >
       <Icon className={`h-4 w-4 ${config.iconColor}`} />
       <span>{getStatusText()}</span>

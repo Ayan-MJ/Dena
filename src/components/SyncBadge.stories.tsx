@@ -8,7 +8,7 @@ const meta: Meta<typeof SyncBadge> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A badge component to display sync status with appropriate icons and colors. The warning status includes a subtle pulse animation.',
+        component: 'A badge component to display sync status with appropriate icons and colors. The warning status includes a subtle pulse animation. Warning and error states automatically trigger toast notifications and are clickable to navigate to reconnect page.',
       },
     },
   },
@@ -43,12 +43,26 @@ export const Warning: Story = {
   args: {
     status: 'warning',
   },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Warning status triggers a toast notification and becomes clickable to navigate to reconnect page.',
+      },
+    },
+  },
 };
 
 // Error status
 export const Error: Story = {
   args: {
     status: 'error',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Error status triggers a toast notification and becomes clickable to navigate to reconnect page.',
+      },
+    },
   },
 };
 
