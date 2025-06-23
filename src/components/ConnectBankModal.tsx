@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { 
   usePlaidLink, 
   PlaidLinkOnSuccess, 
@@ -21,6 +21,8 @@ export default function ConnectBankModal({
   onClose, 
   onSuccess 
 }: ConnectBankModalProps) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   // Plaid Link configuration
   const config = {
     token: process.env.NEXT_PUBLIC_PLAID_LINK_TOKEN || 'link_sandbox_placeholder', // Use env var or placeholder
@@ -72,6 +74,13 @@ export default function ConnectBankModal({
     };
   }, [open]);
 
+  // Focus management
+  useEffect(() => {
+    if (open && closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open && (
@@ -94,16 +103,20 @@ export default function ConnectBankModal({
             transition={{ duration: 0.2 }}
             className="relative w-full max-w-md mx-auto"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
           >
             {/* Glassmorphic dialog */}
             <div className="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/10 dark:border-slate-700/50">
                 <div>
-                  <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                  <h2 id="modal-title" className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                     Connect Your Bank
                   </h2>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  <p id="modal-description" className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                     Securely link your bank account with Plaid
                   </p>
                 </div>
@@ -111,6 +124,7 @@ export default function ConnectBankModal({
                   onClick={onClose}
                   className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   aria-label="Close modal"
+                  ref={closeButtonRef}
                 >
                   <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                 </button>
@@ -133,6 +147,7 @@ export default function ConnectBankModal({
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"

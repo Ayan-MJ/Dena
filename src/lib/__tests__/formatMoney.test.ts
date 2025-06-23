@@ -90,8 +90,13 @@ describe('formatMoney', () => {
     });
 
     test('handles invalid currency gracefully', () => {
+      // Mock console.warn to prevent noise in test output
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      
       const result = formatMoney(100, 'INVALID');
       expect(result).toBe('INVALID 100.00'); // Fallback format
+      
+      consoleSpy.mockRestore();
     });
 
     test('handles invalid locale gracefully', () => {
@@ -122,7 +127,11 @@ describe('formatMoney', () => {
   });
 
   it('handles invalid currency gracefully', () => {
+    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    
     expect(formatMoney(1234.56, 'INVALID')).toBe('INVALID 1234.56');
+    
+    consoleSpy.mockRestore();
   });
 });
 
@@ -160,8 +169,12 @@ describe('formatMoneyAdvanced', () => {
   });
 
   test('handles invalid options gracefully', () => {
+    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    
     const result = formatMoneyAdvanced(100, 'INVALID', { locale: 'invalid' });
     expect(result).toBe('INVALID 100.00'); // Fallback format
+    
+    consoleSpy.mockRestore();
   });
 
   it('formats with custom options', () => {

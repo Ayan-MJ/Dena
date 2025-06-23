@@ -12,9 +12,30 @@ jest.mock('react-plaid-link', () => ({
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
-    a: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
+    div: ({ children, whileHover, whileTap, animate, transition, initial, exit, ...props }: React.ComponentProps<'div'> & {
+      whileHover?: unknown;
+      whileTap?: unknown;
+      animate?: unknown;
+      transition?: unknown;
+      initial?: unknown;
+      exit?: unknown;
+    }) => <div {...props}>{children}</div>,
+    button: ({ children, whileHover, whileTap, animate, transition, initial, exit, ...props }: React.ComponentProps<'button'> & {
+      whileHover?: unknown;
+      whileTap?: unknown;
+      animate?: unknown;
+      transition?: unknown;
+      initial?: unknown;
+      exit?: unknown;
+    }) => <button {...props}>{children}</button>,
+    a: ({ children, whileHover, whileTap, animate, transition, initial, exit, ...props }: React.ComponentProps<'a'> & {
+      whileHover?: unknown;
+      whileTap?: unknown;
+      animate?: unknown;
+      transition?: unknown;
+      initial?: unknown;
+      exit?: unknown;
+    }) => <a {...props}>{children}</a>,
   },
 }));
 

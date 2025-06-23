@@ -93,8 +93,21 @@ export default function SyncBadge({ status, className = "" }: SyncBadgeProps) {
       animate={config.pulse ? { opacity: [1, 0.7, 1] } : {}}
       transition={config.pulse ? { duration: 2, repeat: Infinity } : {}}
       onClick={handleClick}
+      role={(status === 'warning' || status === 'error') ? 'button' : undefined}
+      tabIndex={(status === 'warning' || status === 'error') ? 0 : undefined}
+      onKeyDown={(e) => {
+        if ((status === 'warning' || status === 'error') && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+      aria-label={
+        (status === 'warning' || status === 'error')
+          ? `Sync status: ${getStatusText()}. Click to reconnect banks.`
+          : `Sync status: ${getStatusText()}`
+      }
     >
-      <Icon className={`h-4 w-4 ${config.iconColor}`} />
+      <Icon className={`h-4 w-4 ${config.iconColor}`} aria-hidden="true" />
       <span>{getStatusText()}</span>
     </motion.div>
   );
